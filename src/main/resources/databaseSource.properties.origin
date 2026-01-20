@@ -1,0 +1,5 @@
+database.url = 
+database.username =
+database.password =
+
+Создай файл databaseSource.properties и скопируй эти значения себе, только настрой под себя и закинь в .gitignore
