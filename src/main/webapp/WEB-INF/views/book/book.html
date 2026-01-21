@@ -16,7 +16,6 @@
          <p th:text="${book.author}"> Толстой </p>
          <p th:text="${book.dateCreate}"> 2025-06-03 </p>
      </div>
-    <!--/*@thymesVar id="person" type="ru.petrosyan.library.entity.Book"*/-->
     <div th:if="${book.person}">
         <h2> Сведения о владельце </h2>
         <p th:text="${book.person.fio}"> Петросян Армен Арташесович </p>
@@ -24,7 +23,18 @@
     </div>
     <div th:if="not ${book.person}">
         <h2> У пользователя еще нет книги! Добавьте ниже </h2>
-        <!--Добавить позже--->
+        <div th:if="${peopleList.empty}">
+            <p> Читателей нет в системе</p>
+        </div>
+        <div th:if="not ${peopleList.empty}">
+            <form th:action="@{/book/{id}/assign(id=${book.id})}" th:method="patch">
+                <select name="personId">
+                    <!--/*@thymesVar id="person" type="ru.petrosyan.library.entity.Person"*/-->
+                    <option th:each="person : ${peopleList}" th:value="${person.id}" th:text="${person.fio}"></option>
+                </select>
+                <input type="submit" value="Назначить книгу человеку">
+            </form>
+        </div>
     </div>
      <div class="details-actions">
          <a th:href="@{/book/{id}/edit(id=${book.id})}" class="btn btn-primary">

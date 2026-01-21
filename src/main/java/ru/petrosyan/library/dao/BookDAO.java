@@ -113,4 +113,20 @@ public class BookDAO {
         }
         return row;
     }
+
+    public void assignPersonByBook(Integer personId, Integer bookId) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("update book set person_id=? where book_id=?;")
+        ) {
+            preparedStatement.setInt(1, personId);
+            preparedStatement.setInt(2, bookId);
+            int row = preparedStatement.executeUpdate();
+            if (row > 0) {
+                System.out.println("Book is assign by Person");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error database for assign Book by Person: " + e);
+            e.printStackTrace();
+        }
+    }
 }

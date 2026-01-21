@@ -18,10 +18,12 @@ import javax.validation.Valid;
 public class BookController {
 
     private final BookDAO bookDAO;
+    private final PersonDAO personDAO;
 
     @Autowired
-    public BookController(BookDAO bookDAO, PersonDAO personDAO) {
+    public BookController(BookDAO bookDAO, PersonDAO personDAO, PersonDAO personDAO1) {
         this.bookDAO = bookDAO;
+        this.personDAO = personDAO1;
     }
 
     @GetMapping
@@ -70,6 +72,7 @@ public class BookController {
         Book book = bookDAO.getBookById(bookId);
         if (book != null) {
             model.addAttribute("book", book);
+            model.addAttribute("peopleList", personDAO.getAllPersons());
             return "book/book";
         }
         redirectAttributes.addFlashAttribute("error", "Книга с данным id не была найдена. Возможно она была удалена");
@@ -86,4 +89,11 @@ public class BookController {
         }
         return "redirect:/book";
     }
+
+    @PatchMapping("/{id}/assign")
+    public String assignBookByPerson(@PathVariable("id") Integer bookId, @RequestParam("personId") Integer personId) {
+        bookDAO.assignPersonByBook(personId, bookId);
+        return "redirect:/book/" + bookId;
+    }
+
 }
