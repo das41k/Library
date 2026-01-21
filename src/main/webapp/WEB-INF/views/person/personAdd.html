@@ -14,7 +14,7 @@
         <h1><i class="fas fa-user-edit"></i> Редактирование читателя</h1>
 
         <!--/*@thymesVar id="person" type="ru.petrosyan.library.entity.Person"*/-->
-        <form th:action="@{/people/{id}(id=${person.id})}" th:method="POST" th:object="${person}">
+        <form th:action="@{/people}" th:method="POST" th:object="${person}">
 
             <div class="form-group" th:classappend="${#fields.hasErrors('fio')} ? 'has-error'">
                 <label for="fio">
@@ -46,7 +46,7 @@
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save btn-icon"></i> Сохранить изменения
                 </button>
-                <a th:href="@{/people/{id}(id=${person.id})}" class="btn btn-secondary">
+                <a th:href="@{/people}" class="btn btn-secondary">
                     <i class="fas fa-times btn-icon"></i> Отмена
                 </a>
             </div>

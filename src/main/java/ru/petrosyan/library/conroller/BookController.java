@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.petrosyan.library.dao.BookDAO;
+import ru.petrosyan.library.entity.Book;
 
 @Controller
 @RequestMapping("/book")
@@ -22,5 +23,11 @@ public class BookController {
     public String getAllBooks(Model model) {
         model.addAttribute("bookList", bookDAO.getAllBooks());
         return "book/bookList";
+    }
+
+    @GetMapping("/new")
+    public String formInsertBook(Model model) {
+        model.addAttribute("book", new Book());
+        return "/book/bookAdd";
     }
 }
