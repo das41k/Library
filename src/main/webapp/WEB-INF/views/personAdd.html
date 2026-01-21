@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление читателя</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div th:if="${error}">
+        <p th:text="${error}"></p>
+    </div>
+    <!--/*@thymesVar id="person" type="ru.petrosyan.library.entity.Person"*/-->
+    <form th:action="@{/people}" th:method="POST" th:object="${person}">
+        <label> Введите ФИО
+            <input type="text" th:field="*{fio}" id="fio">
+        </label>
+        <label> Выберите дату рождения
+            <input type="date" th:field="*{dateBirth}" id="dateBirth">
+        </label>
+        <input type="submit" value="Добавить читателя">
+    </form>
+</body>
+</html>
