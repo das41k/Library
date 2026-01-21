@@ -26,5 +26,18 @@
         <h2> У пользователя еще нет книги! Добавьте ниже </h2>
         <!--Добавить позже--->
     </div>
+     <div class="details-actions">
+         <a th:href="@{/book/{id}/edit(id=${book.id})}" class="btn btn-primary">
+             <i class="fas fa-edit btn-icon"></i> Редактировать
+         </a>
+         <form th:action="@{/book/{id}(id=${book.id})}" th:method="DELETE" class="delete-form">
+             <button type="submit" class="btn btn-danger">
+                 <i class="fas fa-trash btn-icon"></i> Удалить книгу
+             </button>
+         </form>
+         <a th:href="@{/book}" class="btn btn-secondary">
+             <i class="fas fa-arrow-left btn-icon"></i> Назад к списку
+         </a>
+     </div>
 </body>
 </html>

@@ -75,4 +75,15 @@ public class BookController {
         redirectAttributes.addFlashAttribute("error", "Книга с данным id не была найдена. Возможно она была удалена");
         return "redirect:/book";
     }
+
+    @DeleteMapping("/{id}")
+    public String deleteBook(@PathVariable("id") Integer bookId, RedirectAttributes redirectAttributes) {
+        int row = bookDAO.deleteBookById(bookId);
+        if (row > 0) {
+            redirectAttributes.addFlashAttribute("info", "Книга с id = " + bookId + " была удалена!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Книга с данным id не была найдена. Возможно она была удалена");
+        }
+        return "redirect:/book";
+    }
 }
