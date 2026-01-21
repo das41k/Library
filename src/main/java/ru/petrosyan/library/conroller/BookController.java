@@ -4,12 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.petrosyan.library.dao.BookDAO;
+import ru.petrosyan.library.dao.PersonDAO;
 import ru.petrosyan.library.entity.Book;
+import ru.petrosyan.library.entity.Person;
 
 import javax.validation.Valid;
 
@@ -20,7 +20,7 @@ public class BookController {
     private final BookDAO bookDAO;
 
     @Autowired
-    public BookController(BookDAO bookDAO) {
+    public BookController(BookDAO bookDAO, PersonDAO personDAO) {
         this.bookDAO = bookDAO;
     }
 
@@ -42,6 +42,26 @@ public class BookController {
             return "book/bookAdd";
         }
         bookDAO.insertBook(book);
+        return "redirect:/book";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String formUpdateBook(@PathVariable("id") Integer bookId, Model model, RedirectAttributes redirectAttributes) {
+        Book book = bookDAO.getBookById(bookId);
+        if (book != null) {
+            model.addAttribute("book", book);
+            return "book/bookEdit";
+        }
+        redirectAttributes.addFlashAttribute("error", "Книга с данным id не была найдена. Возможно она была удалена");
+        return "redirect:/book";
+    }
+
+    @PatchMapping("/{id}")
+    public String updateBook(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "book/bookEdit";
+        }
+        bookDAO.updateBook(book);
         return "redirect:/book";
     }
 }
