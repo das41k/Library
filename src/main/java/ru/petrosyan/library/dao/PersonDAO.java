@@ -56,6 +56,23 @@ public class PersonDAO {
         }
     }
 
+    public void updatePerson(Person person) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE person SET fio = ?, datebirth = ? where person_id = ?");
+        ) {
+            preparedStatement.setString(1, person.getFio());
+            preparedStatement.setDate(2, Date.valueOf(person.getDateBirth()));
+            preparedStatement.setInt(3, person.getId());
+            int row = preparedStatement.executeUpdate();
+            if (row > 0) {
+                System.out.println("Person is update");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error" + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public Person getPersonById(Integer personId) {
         Person person = null;
         String personSql = "SELECT * FROM person WHERE person_id = ?";
