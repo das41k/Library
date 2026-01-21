@@ -92,7 +92,13 @@ public class BookController {
 
     @PatchMapping("/{id}/assign")
     public String assignBookByPerson(@PathVariable("id") Integer bookId, @RequestParam("personId") Integer personId) {
-        bookDAO.assignPersonByBook(personId, bookId);
+        bookDAO.assignBookByPerson(personId, bookId);
+        return "redirect:/book/" + bookId;
+    }
+
+    @PatchMapping("{id}/untie")
+    public String untieBookByPerson(@PathVariable("id") Integer bookId) {
+        bookDAO.untieBookByPerson(bookId);
         return "redirect:/book/" + bookId;
     }
 

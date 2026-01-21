@@ -20,6 +20,9 @@
         <h2> Сведения о владельце </h2>
         <p th:text="${book.person.fio}"> Петросян Армен Арташесович </p>
         <p th:text="${book.person.dateBirth}"> 2005-06-06 </p>
+        <form th:action="@{/book/{id}/untie(id=${book.id})}" th:method="patch">
+            <input type="submit" value="Отвязать книгу от человека">
+        </form>
     </div>
     <div th:if="not ${book.person}">
         <h2> У пользователя еще нет книги! Добавьте ниже </h2>
