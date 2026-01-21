@@ -5,10 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.petrosyan.library.entity.Book;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,5 +36,22 @@ public class BookDAO {
             throw new RuntimeException(e);
         }
         return bookList;
+    }
+
+    public void insertBook(Book book) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO book (title, author, datecreate) values (?, ?, ?);");
+        ) {
+            preparedStatement.setString(1, book.getTitle());
+            preparedStatement.setString(2, book.getAuthor());
+            preparedStatement.setDate(3, Date.valueOf(book.getDateCreate()));
+            int row = preparedStatement.executeUpdate();
+
+            if (row > 0) {
+                System.out.println("Book is append");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error database by insert Book: " + e);
+        }
     }
 }
