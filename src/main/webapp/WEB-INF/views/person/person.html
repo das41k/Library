@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Информация о читателе</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container person-details-container">
+    <!--/*@thymesVar id="person" type="ru.petrosyan.library.entity.Person"*/-->
+
+    <div class="person-card">
+        <div class="person-header">
+            <div class="person-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="person-info">
+                <h1 th:text="${person.fio}">Иванов Иван Иванович</h1>
+                <div class="person-meta">
+                    <i class="fas fa-birthday-cake"></i>
+                    <span th:text="${person.dateBirth}">1990-01-01</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="details-grid">
+            <div class="detail-item">
+                <h3><i class="fas fa-id-card"></i> ID читателя</h3>
+                <p th:text="${person.id}">#001</p>
+            </div>
+            <div class="detail-item">
+                <h3><i class="fas fa-calendar-alt"></i> Дата рождения</h3>
+                <p th:text="${person.dateBirth}">01.01.1990</p>
+            </div>
+            <div class="detail-item">
+                <h3><i class="fas fa-book"></i> Книг на руках</h3>
+                <p th:text="${person.books.size()}">0</p>
+            </div>
+        </div>
+
+        <!-- Книги читателя -->
+        <div class="books-section">
+            <div class="section-header">
+                <h2><i class="fas fa-book-reader"></i> Книги на руках</h2>
+                <span class="badge" th:text="${person.books.size()}">0</span>
+            </div>
+
+            <div th:if="${person.books.empty}">
+                <div class="empty-books">
+                    <i class="fas fa-book-open"></i>
+                    <p>Читатель пока не взял ни одной книги</p>
+                </div>
+            </div>
+
+            <div th:if="not ${person.books.empty}">
+                <div class="books-list">
+                    <!--/*@thymesVar id="book" type="ru.petrosyan.library.entity.Book"*/-->
+                    <div th:each="book : ${person.books}" th:object="${book}" class="book-card">
+                        <h3 class="book-title" th:text="*{title}">Название книги</h3>
+                        <div class="book-author">
+                            <i class="fas fa-user-pen"></i>
+                            <span th:text="*{author}">Автор книги</span>
+                        </div>
+                        <div class="book-meta">
+                            <div class="book-date">
+                                <i class="far fa-calendar"></i>
+                                <span th:text="*{dateCreate}">2024</span>
+                            </div>
+                            <span class="book-status">На руках</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="details-actions">
+            <a th:href="@{/people/{id}/edit(id=${person.id})}" class="btn btn-primary">
+                <i class="fas fa-edit btn-icon"></i> Редактировать
+            </a>
+            <form th:action="@{/people/{id}(id=${person.id})}" th:method="DELETE" class="delete-form">
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash btn-icon"></i> Удалить читателя
+                </button>
+            </form>
+            <a th:href="@{/people}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left btn-icon"></i> Назад к списку
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

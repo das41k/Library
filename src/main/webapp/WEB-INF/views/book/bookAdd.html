@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавление книги</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container form-container">
+    <div class="form-card">
+        <h1><i class="fas fa-user-edit"></i> Добавление книги</h1>
+
+        <!--/*@thymesVar id="book" type="ru.petrosyan.library.entity.Book"*/-->
+        <form th:action="@{/book}" th:method="POST" th:object="${book}">
+
+            <div class="form-group" th:classappend="${#fields.hasErrors('title')} ? 'has-error'">
+                <label for="title">
+                    <i class="fas fa-user"></i> Название книги
+                </label>
+                <input type="text"
+                       th:field="*{title}"
+                       id="title"
+                       class="form-control"
+                       placeholder="Введите название книги">
+                <div th:if="${#fields.hasErrors('title')}" class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span th:errors="*{title}"></span>
+                </div>
+            </div>
+
+            <div class="form-group" th:classappend="${#fields.hasErrors('author')} ? 'has-error'">
+                <label for="author">
+                    <i class="fas fa-user"></i> ФИО автора
+                </label>
+                <input type="text"
+                       th:field="*{author}"
+                       id="author"
+                       class="form-control"
+                       placeholder="Введите ФИО автора">
+                <div th:if="${#fields.hasErrors('author')}" class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span th:errors="*{author}"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="dateCreate">
+                    <i class="fas fa-calendar-day"></i> Дата выпуска
+                </label>
+                <input type="date"
+                       th:field="*{dateCreate}"
+                       id="dateCreate"
+                       class="form-control"
+                       required>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save btn-icon"></i> Добавить
+                </button>
+                <a th:href="@{/book}" class="btn btn-secondary">
+                    <i class="fas fa-times btn-icon"></i> Отмена
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

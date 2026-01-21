@@ -3,9 +3,14 @@ package ru.petrosyan.library.conroller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.petrosyan.library.dao.PersonDAO;
+import ru.petrosyan.library.entity.Person;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/people")
@@ -21,6 +26,66 @@ public class PersonController {
     @GetMapping
     public String getAllPeoples(Model model) {
         model.addAttribute("peopleList", personDAO.getAllPersons());
-        return "personList";
+        return "person/personList";
     }
+
+    @GetMapping("/new")
+    public String getFormByInsert(Model model) {
+        model.addAttribute("person", new Person());
+        return "person/personAdd";
+    }
+
+    @PostMapping
+    public String insertPerson(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "person/personAdd";
+        }
+        System.out.println("Call for insert");
+        personDAO.insertPerson(person);
+        System.out.println("Redirect for /people");
+        return "redirect:/people";
+    }
+
+    @GetMapping("/{id}")
+    public String getPeople(@PathVariable("id") Integer personId, RedirectAttributes redirectAttributes, Model model) {
+        Person person = personDAO.getPersonById(personId);
+
+        if (person == null) {
+            redirectAttributes.addFlashAttribute("error", "Читатель с данным ID не был найден! Возможно он был уже удален");
+            return "redirect:/people";
+        }
+        model.addAttribute("person", person);
+        return "person/person";
+    }
+
+    @DeleteMapping("/{id}")
+    public String deletePeopleById(@PathVariable("id") Integer peopleId, RedirectAttributes redirectAttributes) {
+        if (personDAO.deletePerson(peopleId) > 0) {
+            redirectAttributes.addFlashAttribute("info", "Читатель с id = " + peopleId + " был удален!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Читатель с данным ID не был найден! Возможно он был уже удален");
+        }
+        return "redirect:/people";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String formUpdatePerson(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes, Model model) {
+        Person person = personDAO.getPersonById(id);
+        if (person == null) {
+            redirectAttributes.addFlashAttribute("error", "Читатель с данным ID не был найден! Возможно он был уже удален");
+            return "redirect:/people";
+        }
+        model.addAttribute("person", person);
+        return "/person/personEdit";
+    }
+
+    @PatchMapping("/{id}")
+    public String updatePerson(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "person/personEdit";
+        }
+        personDAO.updatePerson(person);
+        return "redirect:/people";
+    }
+
 }

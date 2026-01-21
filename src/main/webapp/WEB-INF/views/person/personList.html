@@ -6,6 +6,7 @@
     <title>Список читателей</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -14,6 +15,17 @@
         <p>Список зарегистрированных читателей</p>
     </header>
 
+    <!-- Сообщения об ошибках -->
+    <div th:if="${error}" class="alert alert-danger">
+        <p th:text="${error}"></p>
+    </div>
+
+    <!-- Информационные сообщения -->
+    <div th:if="${info}" class="alert alert-info">
+        <p th:text="${info}"></p>
+    </div>
+
+    <!-- Состояние пустого списка -->
     <div th:if="${peopleList.empty}">
         <div class="empty-state">
             <div class="empty-icon">
@@ -21,12 +33,13 @@
             </div>
             <h3>Список читателей пуст</h3>
             <p>Добавьте первого читателя в систему</p>
-            <a th:href="@{/person/new}" class="btn btn-primary">
+            <a th:href="@{/people/new}" class="btn btn-primary">
                 <i class="fas fa-user-plus btn-icon"></i> Добавить читателя
             </a>
         </div>
     </div>
 
+    <!-- Таблица с читателями -->
     <div th:if="not ${peopleList.empty}">
         <div class="table-container">
             <table class="data-table">
@@ -57,7 +70,7 @@
         </div>
 
         <div class="btn-group">
-            <a th:href="@{/person/new}" class="btn btn-primary">
+            <a th:href="@{/people/new}" class="btn btn-primary">
                 <i class="fas fa-user-plus btn-icon"></i> Добавить нового читателя
             </a>
             <a th:href="@{/}" class="btn btn-secondary">
