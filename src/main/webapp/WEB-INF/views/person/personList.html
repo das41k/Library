@@ -13,7 +13,9 @@
         <h1>👥 Читатели библиотеки</h1>
         <p>Список зарегистрированных читателей</p>
     </header>
-
+    <div th:if="${error}">
+        <p th:text="${error}"> </p>
+    </div>
     <div th:if="${peopleList.empty}">
         <div class="empty-state">
             <div class="empty-icon">

@@ -13,14 +13,14 @@
         <p th:text="*{fio}"> </p>
         <p th:text="*{dateBirth}">  </p>
     </div>
-    <div th:if="${bookList.empty}">
+    <div th:if="${person.books.empty}">
         <p> Человек пока не взял ни одной книги </p>
     </div>
-    <div th:if="not ${bookList.empty}">
+    <div th:if="not ${person.books.empty}">
         <h2> Книги: </h2>
         <ul>
             <!--/*@thymesVar id="book" type="ru.petrosyan.library.entity.Book"*/-->
-            <li th:each="book : ${bookList}" th:object="${book}">
+            <li th:each="book : ${person.books}" th:object="${book}">
                 <p th:text="*{title}"></p>
                 <p th:text="*{author}"></p>
                 <p th:text="*{dateCreate}"></p>
@@ -28,8 +28,8 @@
         </ul>
     </div>
     <div>
-        <a th:href="@{/people/{id}(id = ${person.id})}"> Изменить </a>
-        <a th:href="@{/people/{id}(id = ${person.id})}"> Удалить </a>
+        <a th:href="@{/people/{id}/edit(id=${person.id})}"> Изменить </a>
+        <a th:href="@{/people/{id}(id=${person.id})}"> Удалить </a>
     </div>
 </body>
 </html>

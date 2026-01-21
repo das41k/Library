@@ -58,7 +58,7 @@ public class PersonDAO {
 
     public Person getPersonById(Integer personId) {
         Person person = null;
-        String personSql = "SELECT * FROM people WHERE id = ?";
+        String personSql = "SELECT * FROM person WHERE person_id = ?";
 
         try(Connection connection = dataSource.getConnection();
             PreparedStatement personStmt = connection.prepareStatement(personSql)) {
@@ -94,7 +94,7 @@ public class PersonDAO {
             try (ResultSet rs = bookStmt.executeQuery()) {
                 while (rs.next()) {
                     Book book = new Book();
-                    book.setId(rs.getInt("id"));
+                    book.setId(rs.getInt("book_id"));
                     book.setTitle(rs.getString("title"));
                     book.setAuthor(rs.getString("author"));
                     book.setDateCreate(rs.getDate("datecreate").toLocalDate());
