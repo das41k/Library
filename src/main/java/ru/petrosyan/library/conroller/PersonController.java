@@ -62,4 +62,14 @@ public class PersonController {
         model.addAttribute("person", person);
         return "person/person";
     }
+
+    @DeleteMapping("/{id}")
+    public String deletePeopleById(@PathVariable("id") Integer peopleId, RedirectAttributes redirectAttributes) {
+        if (personDAO.deletePerson(peopleId) > 0) {
+            redirectAttributes.addFlashAttribute("info", "Читатель с id = " + peopleId + " был удален!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Читатель с данным ID не был найден! Возможно он был уже удален");
+        }
+        return "redirect:/people";
+    }
 }
