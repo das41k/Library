@@ -2,6 +2,7 @@ package ru.petrosyan.library.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.petrosyan.library.entity.Book;
 import ru.petrosyan.library.entity.Person;
 
 import javax.sql.DataSource;
@@ -53,5 +54,57 @@ public class PersonDAO {
             System.out.println("Error" + exception.getMessage());
             exception.printStackTrace();
         }
+    }
+
+    public Person getPersonById(Integer personId) {
+        Person person = null;
+        String personSql = "SELECT * FROM people WHERE id = ?";
+
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement personStmt = connection.prepareStatement(personSql)) {
+
+            personStmt.setInt(1, personId);
+
+            try (ResultSet rs = personStmt.executeQuery()) {
+                if (rs.next()) {
+                    person = new Person();
+                    person.setId(rs.getInt("person_id"));
+                    person.setFio(rs.getString("fio"));
+                    person.setDateBirth(rs.getDate("datebirth").toLocalDate());
+                    List<Book> books = getBooksByPersonId(personId, connection);
+                    person.setBooks(books);
+                }
+            }
+
+        } catch (SQLException exception) {
+            System.out.println("Error getting person by id: " + exception.getMessage());
+            exception.printStackTrace();
+        }
+
+        return person;
+    }
+
+    private List<Book> getBooksByPersonId(Integer personId, Connection connection) {
+        List<Book> books = new ArrayList<>();
+        String bookSql = "SELECT * FROM book WHERE person_id = ?";
+
+        try(PreparedStatement bookStmt = connection.prepareStatement(bookSql)) {
+            bookStmt.setInt(1, personId);
+
+            try (ResultSet rs = bookStmt.executeQuery()) {
+                while (rs.next()) {
+                    Book book = new Book();
+                    book.setId(rs.getInt("id"));
+                    book.setTitle(rs.getString("title"));
+                    book.setAuthor(rs.getString("author"));
+                    book.setDateCreate(rs.getDate("datecreate").toLocalDate());
+                    books.add(book);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting books: " + e.getMessage());
+        }
+
+        return books;
     }
 }
