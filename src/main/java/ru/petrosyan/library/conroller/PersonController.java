@@ -72,4 +72,17 @@ public class PersonController {
         }
         return "redirect:/people";
     }
+
+    @GetMapping("/{id}/edit")
+    public String formUpdatePerson(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes, Model model) {
+        Person person = personDAO.getPersonById(id);
+        if (person == null) {
+            redirectAttributes.addFlashAttribute("error", "Читатель с данным ID не был найден! Возможно он был уже удален");
+            return "redirect:/people";
+        }
+        model.addAttribute("person", person);
+        return "/person/personEdit";
+    }
+
+
 }

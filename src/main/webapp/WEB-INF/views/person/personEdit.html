@@ -8,7 +8,7 @@
 </head>
 <body>
 <!--/*@thymesVar id="person" type="ru.petrosyan.library.entity.Person"*/-->
-<form th:action="@{/people/{id}/edit(id=${person.id})}" th:method="PUT" th:object="${person}">
+<form th:action="@{/people/{id}(id=${person.id})}" th:method="PATCH" th:object="${person}">
     <label> Введите ФИО
         <input type="text" th:field="*{fio}" id="fio">
     </label>
