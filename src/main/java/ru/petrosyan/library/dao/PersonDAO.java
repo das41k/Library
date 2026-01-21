@@ -5,10 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.petrosyan.library.entity.Person;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,5 +37,21 @@ public class PersonDAO {
             exception.printStackTrace();
         }
         return peopleList;
+    }
+
+    public void insertPerson(Person person) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO (fio, dateBirth) values (?, ?)");
+        ) {
+            preparedStatement.setString(1, person.getFio());
+            preparedStatement.setDate(2, Date.valueOf(person.getDateBirth()));
+            int row = preparedStatement.executeUpdate();
+            if (row > 0) {
+                System.out.println("Читатель успешно добавлен!");
+            }
+        } catch (SQLException exception) {
+            System.out.println("Error" + exception.getMessage());
+            exception.printStackTrace();
+        }
     }
 }
