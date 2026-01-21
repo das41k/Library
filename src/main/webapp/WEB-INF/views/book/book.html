@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Информация о читателе</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<!--/*@thymesVar id="book" type="ru.petrosyan.library.entity.Book"*/-->
+<body>
+     <div>
+         <h2> Сведения о книге </h2>
+         <p th:text="${book.title}"> Мертвые души </p>
+         <p th:text="${book.author}"> Толстой </p>
+         <p th:text="${book.dateCreate}"> 2025-06-03 </p>
+     </div>
+    <!--/*@thymesVar id="person" type="ru.petrosyan.library.entity.Book"*/-->
+    <div th:if="${book.person}">
+        <h2> Сведения о владельце </h2>
+        <p th:text="${book.person.fio}"> Петросян Армен Арташесович </p>
+        <p th:text="${book.person.dateBirth}"> 2005-06-06 </p>
+    </div>
+    <div th:if="not ${book.person}">
+        <h2> У пользователя еще нет книги! Добавьте ниже </h2>
+        <!--Добавить позже--->
+    </div>
+</body>
+</html>
