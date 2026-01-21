@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Информация о читателе</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!--/*@thymesVar id="person" type="ru.petrosyan.library.entity.Person"*/-->
+    <div th:object="${person}">
+        <p th:text="*{fio}"> </p>
+        <p th:text="*{dateBirth}">  </p>
+    </div>
+    <div th:if="${person.books.empty}">
+        <p> Человек пока не взял ни одной книги </p>
+    </div>
+    <div th:if="not ${person.books.empty}">
+        <h2> Книги: </h2>
+        <ul>
+            <!--/*@thymesVar id="book" type="ru.petrosyan.library.entity.Book"*/-->
+            <li th:each="book : ${person.books}" th:object="${book}">
+                <p th:text="*{title}"></p>
+                <p th:text="*{author}"></p>
+                <p th:text="*{dateCreate}"></p>
+            </li>
+        </ul>
+    </div>
+    <div>
+        <a th:href="@{/people/{id}/edit(id=${person.id})}"> Изменить </a>
+        <a th:href="@{/people/{id}(id=${person.id})}"> Удалить </a>
+    </div>
+</body>
+</html>
