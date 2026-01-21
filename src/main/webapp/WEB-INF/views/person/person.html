@@ -29,7 +29,9 @@
     </div>
     <div>
         <a th:href="@{/people/{id}/edit(id=${person.id})}"> Изменить </a>
-        <a th:href="@{/people/{id}(id=${person.id})}"> Удалить </a>
+        <form th:action="@{/people/{id}(id=${person.id})}" th:method="DELETE">
+            <input th:type="submit" value="Удалить">
+        </form>
     </div>
 </body>
 </html>

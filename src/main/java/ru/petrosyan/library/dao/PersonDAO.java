@@ -107,4 +107,18 @@ public class PersonDAO {
 
         return books;
     }
+
+    public void deletePerson(Integer personId) {
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE from person where person_id = ?")
+        ) {
+            preparedStatement.setInt(1, personId);
+            int rowDeleted = preparedStatement.executeUpdate();
+            if (rowDeleted > 0) {
+                System.out.println("Person with id " + personId + " is deleted");
+            }
+        } catch (SQLException exception) {
+            System.out.println("Error delete Person: " + exception.getMessage());
+        }
+    }
 }
