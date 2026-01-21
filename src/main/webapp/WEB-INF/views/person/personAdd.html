@@ -2,21 +2,56 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Добавление читателя</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование читателя</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!--/*@thymesVar id="person" type="ru.petrosyan.library.entity.Person"*/-->
-    <form th:action="@{/people}" th:method="POST" th:object="${person}">
-        <label> Введите ФИО
-            <input type="text" th:field="*{fio}" id="fio">
-        </label>
-        <div th:if="${#fields.hasErrors('fio')}" th:errors="*{fio}"></div>
-        <label> Выберите дату рождения
-            <input type="date" th:field="*{dateBirth}" id="dateBirth" required>
-        </label>
-        <input type="submit" value="Добавить читателя">
-    </form>
+<div class="container form-container">
+    <div class="form-card">
+        <h1><i class="fas fa-user-edit"></i> Редактирование читателя</h1>
+
+        <!--/*@thymesVar id="person" type="ru.petrosyan.library.entity.Person"*/-->
+        <form th:action="@{/people/{id}(id=${person.id})}" th:method="POST" th:object="${person}">
+
+            <div class="form-group" th:classappend="${#fields.hasErrors('fio')} ? 'has-error'">
+                <label for="fio">
+                    <i class="fas fa-user"></i> ФИО читателя
+                </label>
+                <input type="text"
+                       th:field="*{fio}"
+                       id="fio"
+                       class="form-control"
+                       placeholder="Введите полное ФИО">
+                <div th:if="${#fields.hasErrors('fio')}" class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span th:errors="*{fio}"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="dateBirth">
+                    <i class="fas fa-calendar-day"></i> Дата рождения
+                </label>
+                <input type="date"
+                       th:field="*{dateBirth}"
+                       id="dateBirth"
+                       class="form-control"
+                       required>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save btn-icon"></i> Сохранить изменения
+                </button>
+                <a th:href="@{/people/{id}(id=${person.id})}" class="btn btn-secondary">
+                    <i class="fas fa-times btn-icon"></i> Отмена
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
 </body>
 </html>
