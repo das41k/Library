@@ -41,13 +41,13 @@ public class PersonDAO {
 
     public void insertPerson(Person person) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO (fio, dateBirth) values (?, ?)");
+             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO person (fio, datebirth) values (?, ?)");
         ) {
             preparedStatement.setString(1, person.getFio());
             preparedStatement.setDate(2, Date.valueOf(person.getDateBirth()));
             int row = preparedStatement.executeUpdate();
             if (row > 0) {
-                System.out.println("Читатель успешно добавлен!");
+                System.out.println("Reader is added");
             }
         } catch (SQLException exception) {
             System.out.println("Error" + exception.getMessage());

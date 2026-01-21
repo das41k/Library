@@ -7,16 +7,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div th:if="${error}">
-        <p th:text="${error}"></p>
-    </div>
     <!--/*@thymesVar id="person" type="ru.petrosyan.library.entity.Person"*/-->
     <form th:action="@{/people}" th:method="POST" th:object="${person}">
         <label> Введите ФИО
             <input type="text" th:field="*{fio}" id="fio">
         </label>
+        <div th:if="${#fields.hasErrors('fio')}" th:errors="*{fio}"></div>
         <label> Выберите дату рождения
-            <input type="date" th:field="*{dateBirth}" id="dateBirth">
+            <input type="date" th:field="*{dateBirth}" id="dateBirth" required>
         </label>
         <input type="submit" value="Добавить читателя">
     </form>
