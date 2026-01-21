@@ -38,11 +38,6 @@ public class PersonController {
     @PostMapping
     public String insertPerson(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            System.out.println("Error for validation");
-            for (FieldError error : bindingResult.getFieldErrors()) {
-                System.out.println("Field: " + error.getField() +
-                        ", Error: " + error.getDefaultMessage());
-            }
             return "person/personAdd";
         }
         System.out.println("Call for insert");
@@ -72,4 +67,25 @@ public class PersonController {
         }
         return "redirect:/people";
     }
+
+    @GetMapping("/{id}/edit")
+    public String formUpdatePerson(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes, Model model) {
+        Person person = personDAO.getPersonById(id);
+        if (person == null) {
+            redirectAttributes.addFlashAttribute("error", "Читатель с данным ID не был найден! Возможно он был уже удален");
+            return "redirect:/people";
+        }
+        model.addAttribute("person", person);
+        return "/person/personEdit";
+    }
+
+    @PatchMapping("/{id}")
+    public String updatePerson(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "person/personEdit";
+        }
+        personDAO.updatePerson(person);
+        return "redirect:/people";
+    }
+
 }
