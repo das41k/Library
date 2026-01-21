@@ -3,41 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Информация о читателе</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <title>Информация о книге | Библиотека</title>
+    <link rel="stylesheet" th:href="@{/css/book-styles.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<!--/*@thymesVar id="book" type="ru.petrosyan.library.entity.Book"*/-->
 <body>
-     <div>
-         <h2> Сведения о книге </h2>
-         <p th:text="${book.title}"> Мертвые души </p>
-         <p th:text="${book.author}"> Толстой </p>
-         <p th:text="${book.dateCreate}"> 2025-06-03 </p>
-     </div>
-    <!--/*@thymesVar id="person" type="ru.petrosyan.library.entity.Book"*/-->
-    <div th:if="${book.person}">
-        <h2> Сведения о владельце </h2>
-        <p th:text="${book.person.fio}"> Петросян Армен Арташесович </p>
-        <p th:text="${book.person.dateBirth}"> 2005-06-06 </p>
+<div class="book-details-wrapper">
+    <!-- Хлебные крошки -->
+    <div class="breadcrumb-container">
+        <nav class="breadcrumb-nav">
+            <a th:href="@{/book}" class="breadcrumb-link">
+                <i class="fas fa-arrow-left"></i>
+                <span>Все книги</span>
+            </a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-current">Детали книги</span>
+        </nav>
     </div>
-    <div th:if="not ${book.person}">
-        <h2> У пользователя еще нет книги! Добавьте ниже </h2>
-        <!--Добавить позже--->
+
+    <!-- Основной контент -->
+    <div class="book-main-content">
+        <!-- Левая колонка - информация о книге -->
+        <div class="book-info-section">
+            <div class="book-header">
+                <div class="book-cover-placeholder">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <div class="book-title-section">
+                    <h1 class="book-title" th:text="${book.title}">Название книги</h1>
+                    <div class="book-status-badge" th:classappend="${book.person} ? 'status-loaned' : 'status-available'">
+                        <span class="status-dot"></span>
+                        <span th:text="${book.person} ? 'Выдана' : 'Доступна'"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="book-meta-info">
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="fas fa-user-pen"></i>
+                        <span>Автор</span>
+                    </div>
+                    <div class="info-value" th:text="${book.author}">Автор книги</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="fas fa-calendar-day"></i>
+                        <span>Год издания</span>
+                    </div>
+                    <div class="info-value" th:text="${book.dateCreate}">2024</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="fas fa-hashtag"></i>
+                        <span>ID книги</span>
+                    </div>
+                    <div class="info-value book-id" th:text="${book.id}">#12345</div>
+                </div>
+            </div>
+
+            <!-- Действия с книгой -->
+            <div class="book-actions">
+                <a th:href="@{/book/{id}/edit(id=${book.id})}" class="btn-action btn-edit">
+                    <i class="fas fa-edit"></i>
+                    <span>Редактировать</span>
+                </a>
+                <form th:action="@{/book/{id}(id=${book.id})}" th:method="DELETE" class="delete-form">
+                    <input type="hidden" name="_method" value="delete">
+                    <button type="submit" class="btn-action btn-delete" onclick="return confirm('Удалить эту книгу?')">
+                        <i class="fas fa-trash"></i>
+                        <span>Удалить</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Правая колонка - информация о читателе -->
+        <div class="reader-info-section">
+            <!-- Если книга выдана -->
+            <div th:if="${book.person}" class="current-reader-card">
+                <div class="reader-card-header">
+                    <h2><i class="fas fa-user-check"></i> Книга выдана</h2>
+                    <div class="loan-badge">
+                        <i class="fas fa-book-reader"></i>
+                        <span>На руках</span>
+                    </div>
+                </div>
+
+                <div class="reader-profile">
+                    <div class="reader-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="reader-details">
+                        <h3 class="reader-name" th:text="${book.person.fio}">ФИО читателя</h3>
+                        <div class="reader-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-birthday-cake"></i>
+                                <span>Дата рождения:</span>
+                                <strong th:text="${book.person.dateBirth}">01.01.2000</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form class="return-form" th:action="@{/book/{id}/untie(id=${book.id})}" th:method="patch">
+                    <input type="hidden" name="_method" value="patch">
+                    <button type="submit" class="btn-return">
+                        <i class="fas fa-bookmark"></i>
+                        <span>Вернуть книгу</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Если книга свободна -->
+            <div th:if="not ${book.person}" class="assign-reader-card">
+                <div class="assign-card-header">
+                    <h2><i class="fas fa-user-plus"></i> Выдать книгу</h2>
+                    <div class="available-badge">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Свободна</span>
+                    </div>
+                </div>
+
+                <div th:if="${peopleList.empty}" class="empty-readers">
+                    <div class="empty-icon">
+                        <i class="fas fa-users-slash"></i>
+                    </div>
+                    <h3>Нет доступных читателей</h3>
+                    <p>Добавьте читателей в систему, чтобы выдать книгу</p>
+                    <a th:href="@{/person/new}" class="btn-add-reader">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Добавить читателя</span>
+                    </a>
+                </div>
+
+                <div th:if="not ${peopleList.empty}">
+                    <div class="assign-form-container">
+                        <p class="assign-description">Выберите читателя для выдачи книги</p>
+
+                        <form class="assign-form" th:action="@{/book/{id}/assign(id=${book.id})}" th:method="post">
+                            <input type="hidden" name="_method" value="patch">
+                            <div class="form-group">
+                                <label for="personSelect" class="form-label">
+                                    <i class="fas fa-user-friends"></i>
+                                    <span>Список читателей</span>
+                                </label>
+                                <select id="personSelect" name="personId" class="form-select" required>
+                                    <option value="">-- Выберите читателя --</option>
+                                    <option th:each="person : ${peopleList}"
+                                            th:value="${person.id}"
+                                            th:text="${person.fio}">
+                                    </option>
+                                </select>
+                                <small class="form-hint">Выберите из списка доступных читателей</small>
+                            </div>
+                            <button type="submit" class="btn-assign">
+                                <i class="fas fa-link"></i>
+                                <span>Выдать книгу</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-     <div class="details-actions">
-         <a th:href="@{/book/{id}/edit(id=${book.id})}" class="btn btn-primary">
-             <i class="fas fa-edit btn-icon"></i> Редактировать
-         </a>
-         <form th:action="@{/book/{id}(id=${book.id})}" th:method="DELETE" class="delete-form">
-             <button type="submit" class="btn btn-danger">
-                 <i class="fas fa-trash btn-icon"></i> Удалить книгу
-             </button>
-         </form>
-         <a th:href="@{/book}" class="btn btn-secondary">
-             <i class="fas fa-arrow-left btn-icon"></i> Назад к списку
-         </a>
-     </div>
+
+    <!-- Системная информация -->
+    <div class="system-info">
+        <div class="system-info-content">
+            <div class="last-update">
+                <i class="fas fa-sync-alt"></i>
+                <span>Последнее обновление: </span>
+                <span th:text="${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}"></span>
+            </div>
+            <div class="system-notes">
+                <i class="fas fa-info-circle"></i>
+                <span>Библиотечная система v1.0</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Подтверждение удаления
+        const deleteForms = document.querySelectorAll('.delete-form');
+        deleteForms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                if (!confirm('Вы уверены, что хотите удалить эту книгу?')) {
+                    e.preventDefault();
+                }
+            });
+        });
+
+        // Анимация выбора в селекте
+        const personSelect = document.getElementById('personSelect');
+        if (personSelect) {
+            personSelect.addEventListener('change', function() {
+                if (this.value) {
+                    this.classList.add('has-selection');
+                } else {
+                    this.classList.remove('has-selection');
+                }
+            });
+
+            // Инициализация состояния при загрузке
+            if (personSelect.value) {
+                personSelect.classList.add('has-selection');
+            }
+        }
+
+        // Плавное появление элементов
+        const fadeElements = document.querySelectorAll('.book-info-section, .reader-info-section');
+        fadeElements.forEach((el, index) => {
+            setTimeout(() => {
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    });
+</script>
 </body>
 </html>
