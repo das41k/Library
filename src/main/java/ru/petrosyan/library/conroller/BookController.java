@@ -64,4 +64,15 @@ public class BookController {
         bookDAO.updateBook(book);
         return "redirect:/book";
     }
+
+    @GetMapping("/{id}")
+    public String getBookById(@PathVariable("id") Integer bookId, RedirectAttributes redirectAttributes, Model model) {
+        Book book = bookDAO.getBookById(bookId);
+        if (book != null) {
+            model.addAttribute("book", book);
+            return "book/book";
+        }
+        redirectAttributes.addFlashAttribute("error", "Книга с данным id не была найдена. Возможно она была удалена");
+        return "redirect:/book";
+    }
 }
