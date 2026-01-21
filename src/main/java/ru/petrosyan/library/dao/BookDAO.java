@@ -99,4 +99,18 @@ public class BookDAO {
             e.printStackTrace();
         }
     }
+
+    public int deleteBookById(Integer bookId) {
+        int row = 0;
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("delete from book where book_id = ?");
+        ) {
+            preparedStatement.setInt(1, bookId);
+            row = preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error database by delete Book: " + e);
+            e.printStackTrace();
+        }
+        return row;
+    }
 }
